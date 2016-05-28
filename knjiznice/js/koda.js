@@ -31,12 +31,67 @@ function getSessionId() {
  * @return ehrId generiranega pacienta
  */
 function generirajPodatke(stPacienta) {
-  ehrId = "";
-
-  // TODO: Potrebno implementirati
-
-  return ehrId;
+	sessionId = getSessionId();
+	
+    var name;
+    var surname;
+    var date;
+    var ehrId;
+   
+    switch (stPacienta) {
+    	case 1:
+    		name = "Dedek";
+    		surname = "Mraz";
+    		date = "1922-30-12T00:00";
+    		break;
+    	case 2:
+    		name = "Darth";
+    		surname = "Vader";
+    		date = "1977-25-5T00:00";
+    		break;
+    	case 3:
+    	    name = "Lara";
+    		surname = "Gut";
+    		date = "1991-4-27T00:00";
+    		break;
+    }
+    
+    $.ajaxSetup({
+	    headers: {
+		    "Ehr-Session": getSessionId()
+	    	
+	    }
+    });
+    $.ajax({
+        url: baseUrl + "/ehr",
+		type: 'POST',
+		success: function (data) {
+		    ehrId = data.ehrId;
+		    var partyData = {
+		        firstNames: name,
+		        lastNames: surname,
+		        dateOfBirth: date,
+		        partyAdditionalInfo: [
+		            {
+		                key: "stPacienta", value: stPacienta,
+		                key: "ehrId", value: ehrId
+		                
+		            }
+		        ]
+		    };
+		    $.ajax({
+		        url: baseUrl + "/demographics/party",
+		        type: 'POST',
+		        contentType: 'application/json',
+		        data: JSON.stringify(partyData),
+		    });
+		}
+    });
+    return ehrId;
 }
-
-
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
+$(document).ready(function() {
+	for (var i = 1; i <= 3; i++) {
+    	console.log(generirajPodatke(i));
+ 	}
+});
