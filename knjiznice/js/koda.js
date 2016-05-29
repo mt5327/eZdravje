@@ -73,9 +73,7 @@ function generirajPodatke(stPacienta) {
 		        dateOfBirth: date,
 		        partyAdditionalInfo: [
 		            {
-		                key: "stPacienta", value: stPacienta,
 		                key: "ehrId", value: ehrId
-		                
 		            }
 		        ]
 		    };
@@ -84,6 +82,14 @@ function generirajPodatke(stPacienta) {
 		        type: 'POST',
 		        contentType: 'application/json',
 		        data: JSON.stringify(partyData),
+		        	success: function (party) {
+		                if (party.action == 'CREATE') {
+		                    $('#izbiraPacienta').append("<option>"+name+" "+surname+"</option>")
+		                }
+		            },
+		            error: function(err) {
+		            	
+		            }
 		    });
 		}
     });
@@ -91,7 +97,24 @@ function generirajPodatke(stPacienta) {
 }
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-	for (var i = 1; i <= 3; i++) {
-    	console.log(generirajPodatke(i));
- 	}
+    bootbox.dialog({
+    	message: "Kako želiš začeti?",
+        title: "ime aplikacije",
+        buttons: {
+          vnos: {
+          	label: "Ročni vnos EhrID",
+          	className: "btn-default",
+          },
+        	
+          generiraj: {
+            label: "Generiraj vzorčne paciente",
+            className: "btn-default",
+            callback: function() {
+           		for (var i = 1; i <= 3; i++) {
+    				generirajPodatke(i)
+            	}
+          	}
+          }
+       	}
+    });
 });
