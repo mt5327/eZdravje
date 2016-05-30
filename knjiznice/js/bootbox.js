@@ -742,8 +742,10 @@
 
     if (options.show) {
       dialog.modal("show");
+      var dialogHolder = $('.modal-dialog');
+      dialogHolder.css({ marginLeft: ($(window).width() - dialogHolder.width()) / 2 });
     }
-
+ 
     // @TODO should we return the raw element here or should
     // we wrap it in an object on which we can expose some neater
     // methods, e.g. var d = bootbox.alert(); d.hide(); instead
