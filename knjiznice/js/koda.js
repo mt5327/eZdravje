@@ -42,12 +42,12 @@ function generirajPodatke(stPacienta) {
     	case 1:
     		name = "Dedek";
     		surname = "Mraz";
-    		date = "1922-30-12T00:00";
+    		date = "1922-12-30T00:00";
     		break;
     	case 2:
     		name = "Darth";
     		surname = "Vader";
-    		date = "1977-25-5T00:00";
+    		date = "1977-5-25T00:00";
     		break;
     	case 3:
     	    name = "Lara";
@@ -59,7 +59,6 @@ function generirajPodatke(stPacienta) {
     $.ajaxSetup({
 	    headers: {
 		    "Ehr-Session": getSessionId()
-	    	
 	    }
     });
     $.ajax({
@@ -82,14 +81,14 @@ function generirajPodatke(stPacienta) {
 		        type: 'POST',
 		        contentType: 'application/json',
 		        data: JSON.stringify(partyData),
-		        	success: function (party) {
-		                if (party.action == 'CREATE') {
-		                    $('#izbiraPacienta').append("<option>"+name+" "+surname+"</option>")
-		                }
-		            },
-		            error: function(err) {
-		            	
+		        success: function (party) {
+		            if (party.action == 'CREATE') {
+		                $('.dropdown-menu').append("<li><a href=\"#\">"+name+" "+surname+"</a></li>")
 		            }
+		        },
+		        error: function(err) {
+		            	
+		        }
 		    });
 		}
     });
@@ -97,7 +96,10 @@ function generirajPodatke(stPacienta) {
 }
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    bootbox.dialog({
+    for (var i = 1; i <= 3; i++)
+        generirajPodatke(i);
+    
+ /*    bootbox.dialog({
     	message: "Kako želiš začeti?",
         title: "ime aplikacije",
         buttons: {
@@ -116,5 +118,5 @@ $(document).ready(function() {
           	}
           }
        	}
-    });
+    }); */
 });
