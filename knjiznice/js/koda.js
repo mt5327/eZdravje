@@ -101,6 +101,10 @@ $(document).ready(function() {
             generirajPodatke(i);
         $('#zacetniDialog').modal('hide');
     });
+    $("#rocniVnos").click(function() {
+        $('#zacetniDialog').modal('hide');
+        $('#vnesiEhrID').focus();
+    });
     
     $("#generirajPodatke1").click(function() {
         for (var i = 1; i <= 3; i++)

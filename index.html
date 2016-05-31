@@ -29,7 +29,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a class="generirajPodatke" href="#">Generiranje podatkov</a></li>
+          <li><a id="generirajPodatke1" href="#">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -37,15 +37,7 @@
   <!-- KONEC: Menujska vrstica na vrhu spletne strani -->
 
   <!-- ZAČETEK: Vsebina aplikacije -->
-  <div class="container">
-    <!-- ZACETEK: DROPDOWN -->
-    <div class="dropdown">
-      <button id="generirajPodatke1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-        Izbira osebe<span class="caret"></span></button>
-        <ul class="dropdown-menu">
-        </ul>
-    </div>
-    <!-- KONEC: DROPDOWN -->
+
     <!-- ZACETEK: DIALOG -->
     <div class="modal fade" id="zacetniDialog" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -60,12 +52,37 @@
           <div class="modal-footer">
             <button id="rocniVnos" type="button" class="btn btn-default">Ročni vnos EhrID</button>
             <button id="generirajPodatke2" type="button" class="btn btn-default">Generiraj vzorčne paciente</button>
+            </div>
           </div>
           </div>
         </div>
-      </div>
+      <!-- KONEC: Dialog -->  
+      <div class="container">
       
+      <!-- ZACETEK: Vnos EhrID -->
+      <div class="panel panel-default">
+          <div class="panel-heading">Uporabnik<b></div>
+            <div class="panel-body">
+               <div class="col-lg-6">
+                <div class="input-group">
+                <input id="vnesiEhrID" type="text" class="form-control" placeholder="Vnesi EhrID">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button">OK</button>
+              </span>
+            </div>
+        </div>
+        
+      <!-- ZACETEK: DROPDOWN -->
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+          Izbira osebe<span class="caret"></span></button>
+          <ul class="dropdown-menu">
+          </ul>
+      </div>
+       <!-- KONEC: DROPDOWN -->
     </div>
+  </div>
+  </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>
 </body>
