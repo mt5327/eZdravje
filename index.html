@@ -6,13 +6,6 @@
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
-    .modal {
-      outline: none;
-      position: absolute;
-      margin-top: 0;
-      top: 20%;
-      overflow: visible;
-    }
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
@@ -36,7 +29,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a href="#">Generiranje podatkov</a></li>
+          <li><a class="generirajPodatke" href="#">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -44,13 +37,34 @@
   <!-- KONEC: Menujska vrstica na vrhu spletne strani -->
 
   <!-- ZAČETEK: Vsebina aplikacije -->
-    <div class="container">
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-          Izbira osebe<span class="caret"></span></button>
-          <ul class="dropdown-menu">
-          </ul>
+  <div class="container">
+    <!-- ZACETEK: DROPDOWN -->
+    <div class="dropdown">
+      <button id="generirajPodatke1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+        Izbira osebe<span class="caret"></span></button>
+        <ul class="dropdown-menu">
+        </ul>
+    </div>
+    <!-- KONEC: DROPDOWN -->
+    <!-- ZACETEK: DIALOG -->
+    <div class="modal fade" id="zacetniDialog" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{ime aplikacije}</h4>
+          </div>
+          <div class="modal-body">
+            <p>Kako želiš začeti?</p>
+          </div>
+          <div class="modal-footer">
+            <button id="rocniVnos" type="button" class="btn btn-default">Ročni vnos EhrID</button>
+            <button id="generirajPodatke2" type="button" class="btn btn-default">Generiraj vzorčne paciente</button>
+          </div>
+          </div>
+        </div>
       </div>
+      
     </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>

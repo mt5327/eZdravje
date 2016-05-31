@@ -31,8 +31,6 @@ function getSessionId() {
  * @return ehrId generiranega pacienta
  */
 function generirajPodatke(stPacienta) {
-	sessionId = getSessionId();
-	
     var name;
     var surname;
     var date;
@@ -94,29 +92,18 @@ function generirajPodatke(stPacienta) {
     });
     return ehrId;
 }
+
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    for (var i = 1; i <= 3; i++)
-        generirajPodatke(i);
+    $('#zacetniDialog').modal('show');
+    $("#generirajPodatke2").click(function() {
+        for (var i = 1; i <= 3; i++)
+            generirajPodatke(i);
+        $('#zacetniDialog').modal('hide');
+    });
     
- /*    bootbox.dialog({
-    	message: "Kako želiš začeti?",
-        title: "ime aplikacije",
-        buttons: {
-          vnos: {
-          	label: "Ročni vnos EhrID",
-          	className: "btn-default",
-          },
-        	
-          generiraj: {
-            label: "Generiraj vzorčne paciente",
-            className: "btn-default",
-            callback: function() {
-           		for (var i = 1; i <= 3; i++) {
-    				generirajPodatke(i)
-            	}
-          	}
-          }
-       	}
-    }); */
+    $("#generirajPodatke1").click(function() {
+        for (var i = 1; i <= 3; i++)
+            generirajPodatke(i);   
+    });
 });
