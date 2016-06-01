@@ -6,6 +6,7 @@
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
+    .dropdown-menu {position: relative;}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
@@ -61,8 +62,8 @@
       
       <!-- ZACETEK: Vnos EhrID -->
       <div class="panel panel-default">
-          <div class="panel-heading">Uporabnik<b></div>
-            <div class="panel-body">
+          <div class="panel-heading">Uporabnik</div>
+            <div class="panel-body" style="min-height: 10; max-height: 10;">
                <div class="col-lg-6">
                 <div class="input-group">
                 <input id="vnesiEhrID" type="text" class="form-control" placeholder="Vnesi EhrID">
@@ -74,14 +75,25 @@
         
       <!-- ZACETEK: DROPDOWN -->
       <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+        <button id="izbiraUporabnika" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
           Izbira osebe<span class="caret"></span></button>
-          <ul class="dropdown-menu">
+          <ul id="izbiraUporabnika-menu" class="dropdown-menu">
           </ul>
       </div>
        <!-- KONEC: DROPDOWN -->
     </div>
   </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Obiskane drzave</div><br>
+      <div class="dropdown">
+        <button id="dodajDrzavo" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+          Dodaj drzavo<span class="caret"></span></button>
+          <ul id="izbiraDrzave-menu" class="dropdown-menu">
+          </ul>
+        <ul class="list-group">
+        </ul>
+      </div>
+    </div>
   </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>

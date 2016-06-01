@@ -81,7 +81,7 @@ function generirajPodatke(stPacienta) {
 		        data: JSON.stringify(partyData),
 		        success: function (party) {
 		            if (party.action == 'CREATE') {
-		                $('.dropdown-menu').append("<li><a href=\"#\">"+name+" "+surname+"</a></li>")
+		                $('#izbiraUporabnika-menu').append("<li><a href=\"#\">"+name+" "+surname+"</a></li>")
 		            }
 		        },
 		        error: function(err) {
