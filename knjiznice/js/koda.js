@@ -81,11 +81,11 @@ function generirajPodatke(stPacienta) {
 		        data: JSON.stringify(partyData),
 		        success: function (party) {
 		            if (party.action == 'CREATE') {
-		                $('#izbiraUporabnika-menu').append("<li><a href=\"#\">"+name+" "+surname+"</a></li>")
+		                $('#izbiraUporabnika-menu').append("<li><a data-eid="+ehrId+" href=#>"+name+" "+surname+"</a></li>");
 		            }
 		        },
 		        error: function(err) {
-		            	
+		            $('#obvestila').html("<div class=alert-danger>Kreiranje EhrID-ja ni uspelo. Prosimo poskusite znova.</div>");
 		        }
 		    });
 		}
@@ -93,21 +93,72 @@ function generirajPodatke(stPacienta) {
     return ehrId;
 }
 
+function poisciEhrID(ehrId) {
+    $.ajaxSetup({
+        headers: {
+            "Ehr-Session": getSessionId()
+        }
+    });
+    var searchData = [{key: "ehrId", value: ehrId}];
+    
+    $.ajax({
+        url: baseUrl + "/demographics/party/query",
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(searchData),
+        success: function (res) {
+            for (i in res.parties) {
+                var party = res.parties[i];
+                $('#izbiraUporabnika-menu').append("<li><a href=#>"+party.firstNames+" "+party.lastNames+"</a></li>");
+                $('#obvestila').html("<div class=alert-success>Uporabnik "+party.firstNames+" "+party.lastNames+" dodan v seznam</div>");
+            }
+        }, 
+        error: function(err) {
+            $('#obvestila').html("<div class=alert-danger>Pri iskanju je prislo do napake. Prosimo poskusite ponovno.</div>");
+        }
+    });    
+}
+
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    $('#zacetniDialog').modal('show');
-    $("#generirajPodatke2").click(function() {
-        for (var i = 1; i <= 3; i++)
-            generirajPodatke(i);
-        $('#zacetniDialog').modal('hide');
-    });
-    $("#rocniVnos").click(function() {
-        $('#zacetniDialog').modal('hide');
-        $('#vnesiEhrID').focus();
+    bootbox.dialog({
+        message: "Kako zelis zaceti?",
+        title: "{ime aplikacije}",
+        buttons: {
+            rocno: {
+                label: "Ročni vnos EhrID",
+                className: "btn-default",
+                callback: function() {
+                    $('#vnesiEhrID').focus();
+                }
+            },  
+            generiraj: {
+                label: "Generiraj vzorčne uporabnike",
+                className: "btn-default",
+                callback: function() {
+                    for (var i = 1; i <= 3; i++)
+                        generirajPodatke(i);
+                        $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
+                }
+            }
+        }
     });
     
-    $("#generirajPodatke1").click(function() {
+    $("#gen").click(function() {
         for (var i = 1; i <= 3; i++)
-            generirajPodatke(i);   
+            generirajPodatke(i);
+        $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
+    });
+    
+    $("#isci").click(function() {
+        var ehrId = $("#vnesiEhrID").val();
+        poisciEhrID(ehrId);
+    });
+    
+    $(function(){
+        $(".dropdown-menu").on('click', 'li a', function() {
+        $("#user").html("<div class=alert-info><strong>Trenutni uporabnik:</strong> "+$(this).text()+
+            " <strong>EhrID: </strong>"+$(this).attr('data-eid')+"</div>");
+        });
     });
 });

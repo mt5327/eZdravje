@@ -10,7 +10,7 @@
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
-  <script src="knjiznice/js/bootbox.js"></script>
+  <script src="knjiznice/js/bootbox.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
 </head>
 <body>
@@ -30,7 +30,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a id="generirajPodatke1" href="#">Generiranje podatkov</a></li>
+          <li><a id="gen" href="#">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -40,39 +40,25 @@
   <!-- ZAČETEK: Vsebina aplikacije -->
 
     <!-- ZACETEK: DIALOG -->
-    <div class="modal fade" id="zacetniDialog" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{ime aplikacije}</h4>
+    <div class="container">
+      <div class="panel panel-default">
+          <div id="obvestila" class="panel-body">
+          
           </div>
-          <div class="modal-body">
-            <p>Kako želiš začeti?</p>
-          </div>
-          <div class="modal-footer">
-            <button id="rocniVnos" type="button" class="btn btn-default">Ročni vnos EhrID</button>
-            <button id="generirajPodatke2" type="button" class="btn btn-default">Generiraj vzorčne paciente</button>
-            </div>
-          </div>
-          </div>
-        </div>
-      <!-- KONEC: Dialog -->  
-      <div class="container">
-      
+      </div>
       <!-- ZACETEK: Vnos EhrID -->
       <div class="panel panel-default">
           <div class="panel-heading">Uporabnik</div>
-            <div class="panel-body" style="min-height: 10; max-height: 10;">
+            <div class="panel-body">
                <div class="col-lg-6">
                 <div class="input-group">
                 <input id="vnesiEhrID" type="text" class="form-control" placeholder="Vnesi EhrID">
                 <span class="input-group-btn">
-                <button class="btn btn-default" type="button">OK</button>
+                <button id="isci" class="btn btn-default" type="button">Poisci</button>
               </span>
             </div>
         </div>
-        
+      <!-- KONEC: Vnos EhrID -->        
       <!-- ZACETEK: DROPDOWN -->
       <div class="dropdown">
         <button id="izbiraUporabnika" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
@@ -81,18 +67,8 @@
           </ul>
       </div>
        <!-- KONEC: DROPDOWN -->
-    </div>
-  </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">Obiskane drzave</div><br>
-      <div class="dropdown">
-        <button id="dodajDrzavo" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-          Dodaj drzavo<span class="caret"></span></button>
-          <ul id="izbiraDrzave-menu" class="dropdown-menu">
-          </ul>
-        <ul class="list-group">
-        </ul>
-      </div>
+       <br>
+       <div id="user"></div>
     </div>
   </div>
   <!-- KONEC: Vsebina aplikacije -->
