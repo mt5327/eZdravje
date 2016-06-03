@@ -119,9 +119,55 @@ function poisciEhrID(ehrId) {
     });    
 }
 
+var username2 = "9604c0a9"; 
+var password2 = "985798a1abd45beb2cac6e0e0116ebea";
+
+
+function pridobiSimptome() { 
+    $.ajaxSetup({
+	    headers: {
+		    "app_id": "9604c0a9",
+		    "app_key": "985798a1abd45beb2cac6e0e0116ebea"
+	    }
+    });
+    $.ajax({
+        url: "https://api.infermedica.com/v2/symptoms",
+        type: 'GET',
+        contentType: "application/json",
+        success: function(res) {
+            for (i in res) {
+                var simptom = res[i];
+                $('#sim').append("<option>"+simptom.name+"</option>");
+            }
+        }
+    });
+}
+
+function pridobiFaktorje() { 
+    $.ajaxSetup({
+	    headers: {
+		    "app_id": "9604c0a9",
+		    "app_key": "985798a1abd45beb2cac6e0e0116ebea"
+	    }
+    });
+    $.ajax({
+        url: "https://api.infermedica.com/v2/risk_factors",
+        type: 'GET',
+        contentType: "application/json",
+        success: function(res) {
+            for (i in res) {
+                var faktor = res[i];
+                $('#risk').append("<option>"+faktor.name+"</option>");
+            }
+        }
+    });
+}
+
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    bootbox.dialog({
+    pridobiSimptome();
+    pridobiFaktorje();
+    var box = bootbox.dialog({
         message: "Kako zelis zaceti?",
         title: "{ime aplikacije}",
         buttons: {
@@ -141,6 +187,13 @@ $(document).ready(function() {
                         $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
                 }
             }
+        }
+    });
+    
+    box.css({
+        'top': '50%',
+        'margin-top': function () {
+            return -(box.height() / 2);
         }
     });
     
