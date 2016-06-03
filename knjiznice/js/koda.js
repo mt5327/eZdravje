@@ -214,4 +214,12 @@ $(document).ready(function() {
             " <strong>EhrID: </strong>"+$(this).attr('data-eid')+"</div>");
         });
     });
+    
+    $('#sim, #risk').change(function() {
+        $("#izbire").append("<li class=list-group-item>"+$(this).find("option:selected").text()+"</li>")
+    });
+    
+    $("#pocisti").click(function() {
+        $("#izbire").html("");   
+    });
 });
