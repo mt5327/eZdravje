@@ -1,4 +1,4 @@
-
+0
 var baseUrl = 'https://rest.ehrscape.com/rest/v1';
 var queryUrl = baseUrl + '/query';
 
@@ -33,6 +33,7 @@ function getSessionId() {
 function generirajPodatke(stPacienta) {
     var name;
     var surname;
+    var gender;
     var date;
     var ehrId;
    
@@ -40,16 +41,19 @@ function generirajPodatke(stPacienta) {
     	case 1:
     		name = "Dedek";
     		surname = "Mraz";
+    		gender = "MALE";
     		date = "1922-12-30T00:00";
     		break;
     	case 2:
     		name = "Darth";
     		surname = "Vader";
+    		gender = "MALE";
     		date = "1977-5-25T00:00";
     		break;
     	case 3:
     	    name = "Lara";
     		surname = "Gut";
+    		gender = "FEMALE";
     		date = "1991-4-27T00:00";
     		break;
     }
@@ -67,6 +71,7 @@ function generirajPodatke(stPacienta) {
 		    var partyData = {
 		        firstNames: name,
 		        lastNames: surname,
+		        gender: gender,
 		        dateOfBirth: date,
 		        partyAdditionalInfo: [
 		            {
@@ -93,6 +98,7 @@ function generirajPodatke(stPacienta) {
     return ehrId;
 }
 
+
 function poisciEhrID(ehrId) {
     $.ajaxSetup({
         headers: {
@@ -109,7 +115,7 @@ function poisciEhrID(ehrId) {
         success: function (res) {
             for (i in res.parties) {
                 var party = res.parties[i];
-                $('#izbiraUporabnika-menu').append("<li><a href=#>"+party.firstNames+" "+party.lastNames+"</a></li>");
+                $('#izbiraUporabnika-menu').append("<li><a data-eid"+ehrId+" href=#>"+party.firstNames+" "+party.lastNames+"</a></li>");
                 $('#obvestila').html("<div class=alert-success>Uporabnik "+party.firstNames+" "+party.lastNames+" dodan v seznam</div>");
             }
         }, 
@@ -119,31 +125,35 @@ function poisciEhrID(ehrId) {
     });    
 }
 
-var username2 = "9604c0a9"; 
-var password2 = "985798a1abd45beb2cac6e0e0116ebea";
-
-
-function pridobiSimptome() { 
+function poisciSpol(ehrId, callback) {
+    var spol;
     $.ajaxSetup({
-	    headers: {
-		    "app_id": "9604c0a9",
-		    "app_key": "985798a1abd45beb2cac6e0e0116ebea"
-	    }
-    });
-    $.ajax({
-        url: "https://api.infermedica.com/v2/symptoms",
-        type: 'GET',
-        contentType: "application/json",
-        success: function(res) {
-            for (i in res) {
-                var simptom = res[i];
-                $('#sim').append("<option>"+simptom.name+"</option>");
-            }
+        headers: {
+            "Ehr-Session": getSessionId()
         }
     });
+    var searchData = [{key: "ehrId", value: ehrId}];
+
+    $.ajax({
+        url: baseUrl + "/demographics/party/query",
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(searchData),
+        success: function (res) {
+            for (i in res.parties) {
+                var party = res.parties[i];
+                spol = party.gender.toLowerCase();
+            }
+            callback(spol);
+        },
+        error: function(err) {
+            $('#obvestila').html("<div class=alert-danger>Pri iskanju je prislo do napake. Prosimo poskusite ponovno.</div>");
+        }
+    });  
 }
 
-function pridobiFaktorje() { 
+
+function poisciOpazovanja(phrase, gender) { 
     $.ajaxSetup({
 	    headers: {
 		    "app_id": "9604c0a9",
@@ -151,13 +161,14 @@ function pridobiFaktorje() {
 	    }
     });
     $.ajax({
-        url: "https://api.infermedica.com/v2/risk_factors",
+        url: "https://api.infermedica.com/v2/search?phrase="+phrase+"&sex="+gender+"&max_results=10",
         type: 'GET',
         contentType: "application/json",
         success: function(res) {
             for (i in res) {
-                var faktor = res[i];
-                $('#risk').append("<option>"+faktor.name+"</option>");
+                var re = res[i];
+                $("#rezultati").append("<li class=list-group-item>"+re.label+"</li>");
+                $("#obvestila").text(re.label);
             }
         }
     });
@@ -165,8 +176,6 @@ function pridobiFaktorje() {
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    pridobiSimptome();
-    pridobiFaktorje();
     var box = bootbox.dialog({
         message: "Kako zelis zaceti?",
         title: "{ime aplikacije}",
@@ -184,7 +193,8 @@ $(document).ready(function() {
                 callback: function() {
                     for (var i = 1; i <= 3; i++)
                         generirajPodatke(i);
-                        $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
+                    $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
+                    $('#vnesiEhrID').focus();
                 }
             }
         }
@@ -208,6 +218,8 @@ $(document).ready(function() {
         poisciEhrID(ehrId);
     });
     
+    var trenutniEhrID;
+    
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
         $("#user").html("<div class=alert-info><strong>Trenutni uporabnik:</strong> "+$(this).text()+
@@ -215,11 +227,13 @@ $(document).ready(function() {
         });
     });
     
-    $('#sim, #risk').change(function() {
-        $("#izbire").append("<li class=list-group-item>"+$(this).find("option:selected").text()+"</li>")
+    $(function(){
+        $(".dropdown-menu").on('click', 'li a', function() {
+            trenutniEhrID = $(this).attr('data-eid');
+        });
     });
     
-    $("#pocisti").click(function() {
-        $("#izbire").html("");   
+    $("#is").click(function() {
+        poisciOpazovanja("knee", "female");
     });
 });

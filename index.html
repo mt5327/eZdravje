@@ -11,7 +11,6 @@
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/bootbox.min.js"></script>
-  <script src="knjiznice/js/jquery.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
 </head>
 <body>
@@ -49,7 +48,7 @@
       </div>
       <!-- ZACETEK: Vnos EhrID -->
       <div class="panel panel-default">
-          <div class="panel-heading">Uporabnik</div>
+          <div class="panel-heading">Pacient</div>
             <div class="panel-body">
                <div class="col-lg-6">
                 <div class="input-group">
@@ -68,24 +67,23 @@
           </ul>
       </div>
        <!-- KONEC: DROPDOWN -->
-       <br>
+        <br>
        <div id="user"></div>
-    </div>
+      </div>
     </div>
     <div class="panel panel-default">
+      <div class="panel-heading">Opazovanja</div>
       <div class="panel-body">
-        <div class="form-group">
-    <label for="sim">Simptomi:</label>
-    <select class="form-control" id="sim"></select>
+        <div class="input-group">
+          <input id="opazovanja" type="text" class="form-control" placeholder="Poisci opazovanja">
+          <span class="input-group-btn">
+          <button id="is" class="btn btn-default" type="button">Poisci</button>
+          </span>
         </div>
-      <div class="form-group">
-        <label for="risk">Faktorji tveganja:</label>
-          <select class="form-control" id="risk"></select>
-        </div>
-        <ul id="izbire" class="list-group">
+        <ul id="rezultati" class="list-group">
+          <li class=list-group-item>Tralala</li>
         </ul>
-        <button id="pocisti" class="btn btn-default" type="button">Pocisti</button>
-      </div>
+    </div>
     </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>
