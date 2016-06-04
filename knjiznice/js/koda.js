@@ -1,4 +1,4 @@
-0
+
 var baseUrl = 'https://rest.ehrscape.com/rest/v1';
 var queryUrl = baseUrl + '/query';
 
@@ -86,16 +86,16 @@ function generirajPodatke(stPacienta) {
 		        data: JSON.stringify(partyData),
 		        success: function (party) {
 		            if (party.action == 'CREATE') {
-		                $('#izbiraUporabnika-menu').append("<li><a data-eid="+ehrId+" href=#>"+name+" "+surname+"</a></li>");
+		                gender = gender.toLowerCase();
+		                $('#izbiraUporabnika-menu').append("<li><a data-eid="+ehrId+" gender="+gender+" href=#>"+name+" "+surname+"</a></li>");
 		            }
 		        },
 		        error: function(err) {
 		            $('#obvestila').html("<div class=alert-danger>Kreiranje EhrID-ja ni uspelo. Prosimo poskusite znova.</div>");
-		        }
+		        },
 		    });
-		}
+		},
     });
-    return ehrId;
 }
 
 
@@ -125,35 +125,8 @@ function poisciEhrID(ehrId) {
     });    
 }
 
-function poisciSpol(ehrId, callback) {
-    var spol;
-    $.ajaxSetup({
-        headers: {
-            "Ehr-Session": getSessionId()
-        }
-    });
-    var searchData = [{key: "ehrId", value: ehrId}];
-
-    $.ajax({
-        url: baseUrl + "/demographics/party/query",
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(searchData),
-        success: function (res) {
-            for (i in res.parties) {
-                var party = res.parties[i];
-                spol = party.gender.toLowerCase();
-            }
-            callback(spol);
-        },
-        error: function(err) {
-            $('#obvestila').html("<div class=alert-danger>Pri iskanju je prislo do napake. Prosimo poskusite ponovno.</div>");
-        }
-    });  
-}
-
-
 function poisciOpazovanja(phrase, gender) { 
+    delete $.ajaxSettings.headers["Ehr-Session"];
     $.ajaxSetup({
 	    headers: {
 		    "app_id": "9604c0a9",
@@ -168,7 +141,6 @@ function poisciOpazovanja(phrase, gender) {
             for (i in res) {
                 var re = res[i];
                 $("#rezultati").append("<li class=list-group-item>"+re.label+"</li>");
-                $("#obvestila").text(re.label);
             }
         }
     });
@@ -191,10 +163,10 @@ $(document).ready(function() {
                 label: "Generiraj vzorčne uporabnike",
                 className: "btn-default",
                 callback: function() {
-                    for (var i = 1; i <= 3; i++)
+                    for (var i = 1; i <= 3; i++) {
                         generirajPodatke(i);
+                    }
                     $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
-                    $('#vnesiEhrID').focus();
                 }
             }
         }
@@ -208,8 +180,9 @@ $(document).ready(function() {
     });
     
     $("#gen").click(function() {
-        for (var i = 1; i <= 3; i++)
+        for (var i = 1; i <= 3; i++) {
             generirajPodatke(i);
+        }
         $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
     });
     
@@ -219,7 +192,8 @@ $(document).ready(function() {
     });
     
     var trenutniEhrID;
-    
+    var trenutniSpol;    
+
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
         $("#user").html("<div class=alert-info><strong>Trenutni uporabnik:</strong> "+$(this).text()+
@@ -230,10 +204,12 @@ $(document).ready(function() {
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
             trenutniEhrID = $(this).attr('data-eid');
+            trenutniSpol = $(this).attr('gender');
         });
     });
     
-    $("#is").click(function() {
-        poisciOpazovanja("knee", "female");
+    $("#isciO").click(function() {
+        var phrase = $("#opazovanja").val()
+        poisciOpazovanja(phrase, trenutniSpol);
     });
 });
