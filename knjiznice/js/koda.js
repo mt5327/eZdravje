@@ -140,7 +140,34 @@ function poisciOpazovanja(phrase, gender) {
         success: function(res) {
             for (i in res) {
                 var re = res[i];
-                $("#rezultati").append("<li class=list-group-item>"+re.label+"</li>");
+                $("#rezultati").append("<button type=button class=list-group-item>"+re.label+"</button>");
+            }
+        }
+    });
+}
+
+function diagnoza() { 
+  //  delete $.ajaxSettings.headers["Ehr-Session"];
+    $.ajaxSetup({
+	    headers: {
+		    "app_id": "9604c0a9",
+		    "app_key": "985798a1abd45beb2cac6e0e0116ebea"
+	    }
+    });
+    var d = {    
+        sex: "male",
+        age: 20,
+        evidence: [{ id: "s_14", choice_id: "present" }]
+    }
+    $.ajax({
+        url: "https://api.infermedica.com/v2/diagnosis",
+        type: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(d),
+        success: function(res) {
+            for (i in res) {
+                var c = res[i];
+                $("#obvestila").append("<span>"+c.conditions.name+"</span>");
             }
         }
     });
@@ -212,4 +239,6 @@ $(document).ready(function() {
         var phrase = $("#opazovanja").val()
         poisciOpazovanja(phrase, trenutniSpol);
     });
+    
+    diagnoza();
 });
