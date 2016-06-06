@@ -98,7 +98,6 @@ function generirajPodatke(stPacienta) {
     });
 }
 
-
 function poisciEhrID(ehrId) {
     $.ajaxSetup({
         headers: {
@@ -106,7 +105,6 @@ function poisciEhrID(ehrId) {
         }
     });
     var searchData = [{key: "ehrId", value: ehrId}];
-    
     $.ajax({
         url: baseUrl + "/demographics/party/query",
         type: 'POST',
@@ -138,13 +136,16 @@ function poisciOpazovanja(phrase, gender) {
         type: 'GET',
         contentType: "application/json",
         success: function(res) {
+            $("#rezultati").html("");
             for (i in res) {
                 var re = res[i];
-                $("#rezultati").append("<button type=button class=list-group-item>"+re.label+"</button>");
+                $("#rezultati").append("<button type=button class=list-group-item izbire>"+re.label+"</button>");
             }
         }
     });
 }
+
+var array;
 
 function diagnoza() { 
   //  delete $.ajaxSettings.headers["Ehr-Session"];
@@ -165,12 +166,69 @@ function diagnoza() {
         contentType: "application/json",
         data: JSON.stringify(d),
         success: function(res) {
-            for (i in res) {
-                var c = res[i];
-                $("#obvestila").append("<span>"+c.conditions.name+"</span>");
+            izrisi(res.conditions);
+            for (i in res.conditions) {
+                var c = res.conditions[i];
+                $("#obvestila").append("<span>"+c.name+"</span>");
             }
         }
     });
+}
+
+    
+function izrisi(data) {    
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 400 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var svg = d3.select("#graf").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    x.domain(data.map(function(d) { return d.name; }));
+    y.domain([0, d3.max(data, function(d) { return d.probability; })]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Probability");
+            
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.name); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.probability); })
+        .attr("height", function(d) { return height - y(d.probability); });
+
 }
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
@@ -240,5 +298,14 @@ $(document).ready(function() {
         poisciOpazovanja(phrase, trenutniSpol);
     });
     
-    diagnoza();
+    $(function() {
+        $("#rezultati").on("click", 'button', function() {
+            if (!$(this).hasClass('disabled')) {
+                $(this).addClass('disabled');
+                $("#izbire").append("<li class=list-group-item>"+$(this).text()+"</li>");
+            }
+        });
+    });
+    
+    diagnoza()
 });

@@ -7,10 +7,16 @@
   <style>
     body {padding-top: 70px;}
     .dropdown-menu {position: relative;}
+    .bar {fill: steelblue;}
+    .bar:hover {fill: brown;}
+    .axis {font: 10px sans-serif;}
+    .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}
+    .x.axis path {display: none;}
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/bootbox.min.js"></script>
+  <script src="knjiznice/js/d3.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
 </head>
 <body>
@@ -71,6 +77,8 @@
        <div id="user"></div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">Iskalnik opazovanj</div>
       <div class="panel-body">
@@ -82,12 +90,34 @@
         </div>
     </div>
     </div>
-    
+    </div>
+    <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">Rezultati</div>
       <div id="rezultati" class="panel-body">
       </div> 
     </div>
+  </div>
+  </div>
+  <div class="row">
+      <div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">Izbire</div>
+        <div class="panel-body">
+          <ul id="izbire" class="list-group">
+          </ul>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">Graf verjetnosti</div>
+      <div id="graf" class="panel-body">
+
+      </div> 
+    </div>
+  </div>
+  </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>
 </body>
