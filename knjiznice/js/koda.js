@@ -42,19 +42,19 @@ function generirajPodatke(stPacienta) {
     		name = "Dedek";
     		surname = "Mraz";
     		gender = "MALE";
-    		date = "1922-12-30T00:00";
+    		date = "1922-12-30T00:00Z";
     		break;
     	case 2:
     		name = "Darth";
     		surname = "Vader";
     		gender = "MALE";
-    		date = "1977-5-25T00:00";
+    		date = "1977-05-25T00:00Z";
     		break;
     	case 3:
     	    name = "Lara";
     		surname = "Gut";
     		gender = "FEMALE";
-    		date = "1991-4-27T00:00";
+    		date = "1991-04-27T00:00Z";
     		break;
     }
     
@@ -87,7 +87,8 @@ function generirajPodatke(stPacienta) {
 		        success: function (party) {
 		            if (party.action == 'CREATE') {
 		                gender = gender.toLowerCase();
-		                $('#izbiraUporabnika-menu').append("<li><a data-eid="+ehrId+" gender="+gender+" href=#>"+name+" "+surname+"</a></li>");
+		                $('#izbiraUporabnika-menu').append("<li><a data-eid="+ehrId+" gender="+gender
+		                   +" dob="+date+" href=#>"+name+" "+surname+"</a></li>");
 		            }
 		        },
 		        error: function(err) {
@@ -113,7 +114,8 @@ function poisciEhrID(ehrId) {
         success: function (res) {
             for (i in res.parties) {
                 var party = res.parties[i];
-                $('#izbiraUporabnika-menu').append("<li><a data-eid"+ehrId+" href=#>"+party.firstNames+" "+party.lastNames+"</a></li>");
+                $('#izbiraUporabnika-menu').append("<li><a data-eid"+ehrId+" gender="+gender+" dob="+date 
+                +" href=#>"+party.firstNames+" "+party.lastNames+"</a></li>");
                 $('#obvestila').html("<div class=alert-success>Uporabnik "+party.firstNames+" "+party.lastNames+" dodan v seznam</div>");
             }
         }, 
@@ -145,9 +147,7 @@ function poisciOpazovanja(phrase, gender) {
     });
 }
 
-var array;
-
-function diagnoza() { 
+function diagnoza(gender, age, evidence) { 
   //  delete $.ajaxSettings.headers["Ehr-Session"];
     $.ajaxSetup({
 	    headers: {
@@ -156,9 +156,9 @@ function diagnoza() {
 	    }
     });
     var d = {    
-        sex: "male",
-        age: 20,
-        evidence: [{ id: "s_14", choice_id: "present" }]
+        sex: gender,
+        age: age,
+        evidence: evidence
     }
     $.ajax({
         url: "https://api.infermedica.com/v2/diagnosis",
@@ -231,11 +231,18 @@ function izrisi(data) {
 
 }
 
+function getAgeInYears(dateOfBirth) {
+    var dob = new Date(dateOfBirth);
+    console.log(dob);
+    var timeDiff = Math.abs(Date.now() - dob.getTime());
+    return Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
+}
+
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
     var box = bootbox.dialog({
         message: "Kako zelis zaceti?",
-        title: "{ime aplikacije}",
+        title: "eDiagnosis",
         buttons: {
             rocno: {
                 label: "Ročni vnos EhrID",
@@ -276,8 +283,8 @@ $(document).ready(function() {
         poisciEhrID(ehrId);
     });
     
-    var trenutniEhrID;
     var trenutniSpol;    
+    var trenutnaStarost;
 
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
@@ -288,8 +295,8 @@ $(document).ready(function() {
     
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
-            trenutniEhrID = $(this).attr('data-eid');
             trenutniSpol = $(this).attr('gender');
+            trenutnaStarost = $(this).attr('dob');
         });
     });
     
@@ -306,6 +313,4 @@ $(document).ready(function() {
             }
         });
     });
-    
-    diagnoza()
 });

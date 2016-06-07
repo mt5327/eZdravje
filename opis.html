@@ -22,7 +22,7 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
         <!-- ZAČETEK: Ime vaše aplikacije -->
-        <a class="navbar-brand" href="index.html">{ime vaše aplikacije}</a>
+        <a class="navbar-brand" href="index.html">eDiagnosis</a>
         <!-- KONEC: Ime vaše aplikacije -->
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
@@ -45,9 +45,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Opis ideje, ki jo aplikacija podpira -->
-            <!-- OSNUTEK -->
-            <p>Aplikacija belezi pretekla potovanja in podatke o njegovih vitalnih znakih. V primeru odstopanj od normalnih vrednosti, aplikacija poveze sindrome s boleznimi, ki so se pojavljale na obmocjih potovanja.
-            Ciljna skupina so osebe, ki veliko potujejo, saj se lahko bolezenski znaki pojavijo lahko sele cez nekaj mesecev</p>
+            <p>Aplikacija podpira iskanje mogocih diagnoz po bazi podatkov zunanjega vira (Infermedica API). Namen je spodbuditi uporabnika k obisku zdravnika, ce je verjetnosti
+            diagnoze sorazmerno visoka (blizu 1)</p>
             <!-- KONEC: Opis ideje, ki jo aplikacija podpira -->
           </div>
         </div>
@@ -57,7 +56,8 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Uporabljeni zunanji viri podatkov -->
-            <p><strong>TO-DO</strong>: Na tem mestu je navesti zunanji vir podatkov (URL naslov), na kakšen način ste ga uporabili (neposredni API klic, uvožena statična datoteka ipd.) in kaj je bil namen uporabe (kako se vključuje v osnovno idejo aplikacije).</p>
+            <p>Uporabil sem <a href="https://developer.infermedica.com/docs/api">, kot nadgradnjo zmoznosti Ehrscape API-ja, saj s pomocjo neposrednega API klica
+            omogoca analizo podatkov (simptomov in faktorjev tveganja)</p>
             <!-- KONEC: Uporabljeni zunanji viri podatkov -->
           </div>
         </div>
@@ -67,7 +67,7 @@
           </div>
           <div class="panel-body">
             <!-- ZAČETEK: Master/detail načrtovalski vzorec -->
-            <p><strong>TO-DO</strong>: Na tem mestu morate navesti uporabljen master/detail načrtovalski vzorec in na kakšen način ga nameravate uporabiti.</p>
+            <p>Uporabnik lahko klikne na diagnozo in se mu prikazejo podrobnosti (Prevalence (pogostost), graf in Probability(verjetnost)</p>
             <!-- KONEC: Master/detail načrtovalski vzorec -->
           </div>
         </div>
