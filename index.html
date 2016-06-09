@@ -36,7 +36,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a id="gen" href="#">Generiranje podatkov</a></li>
+          <li><a id="generirajPodatke" href="#">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -106,18 +106,23 @@
         <div class="panel-body">
           <ul id="izbire" class="list-group">
           </ul>
+          <button id="clear" class="btn btn-default" type="button">Pocisti</button>
       </div>
     </div>
     </div>
-    <div class="col-md-6">
     <div class="panel panel-default">
-      <div class="panel-heading">Graf verjetnosti</div>
-      <div id="graf" class="panel-body">
-
-      </div> 
+      <div class="panel-heading">Mozne diagnoze</div>
+      <div class ="panel-body">
+        <div id="diagnoze" class="list-group"></ul>
+        </div>
+      </div>
     </div>
   </div>
-  </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Graf verjetnosti</div>
+        <div id="graf" class="panel-body">
+        </div>
+      </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>
 </body>
