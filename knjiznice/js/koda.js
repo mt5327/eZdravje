@@ -6,21 +6,14 @@ var password = "ois4fri";
  
 var baseURL = 'https://api.infermedica.com/v2/';
 
-var appid = "21d48171";
-var appkey = "fab45ae08b455c52c3415d80afcf7927";
+var appid = "58bd7b38";
+var appkey = "7010808956ebbe0a0228eb94396aacf1";
 
 var trenutniEhrID = null;
 var trenutniSpol;    
 var trenutnaStarost;
 var evidence = [];
 
-
-/* App name
-Markus Tischler's App
-App ID
-58bd7b38
-Key
-7010808956ebbe0a0228eb94396aacf1 */
 
 /**
  * Prijava v sistem z privzetim uporabnikom za predmet OIS in pridobitev
@@ -426,6 +419,7 @@ function izrisiGraf(data) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
+        .ticks(5);
 
     svg.append("g")
         .attr("class", "y axis")
@@ -510,7 +504,7 @@ $(document).ready(function() {
     
     $("#poisciSimptome").click(function() {
         if (trenutniEhrID == null) {
-            $("#obvestila").html("<div class=alert-danger>Prosimo izberite enega od uporabnikov.</div>");
+            $("#obvestila").html("<div class=alert-danger>Prosimo izberite enega od uporabnikov ali vnesite EhrID.</div>");
         } else {
             var phrase = $("#vnesiPoizvedbo").val()
             poisciSimptomeInFaktorjeTveganja(phrase, trenutniSpol);
