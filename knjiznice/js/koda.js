@@ -9,6 +9,19 @@ var baseURL = 'https://api.infermedica.com/v2/';
 var appid = "21d48171";
 var appkey = "fab45ae08b455c52c3415d80afcf7927";
 
+var trenutniEhrID = null;
+var trenutniSpol;    
+var trenutnaStarost;
+var evidence = [];
+
+
+/* App name
+Markus Tischler's App
+App ID
+58bd7b38
+Key
+7010808956ebbe0a0228eb94396aacf1 */
+
 /**
  * Prijava v sistem z privzetim uporabnikom za predmet OIS in pridobitev
  * enolične ID številke za dostop do funkcionalnosti
@@ -175,6 +188,12 @@ function dodajMeritveVitalnihZnakov(stPacienta, ehrId) {
 	});
 }
 
+function vrniStarostVLetih(dateOfBirth) {
+    var dob = new Date(dateOfBirth);
+    var timeDiff = Math.abs(Date.now() - dob.getTime());
+    return Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
+}
+
 
 function poisciEhrID(ehrId) {
     $.ajaxSetup({
@@ -202,8 +221,7 @@ function poisciEhrID(ehrId) {
     });    
 }
 
-var evidence = [];
-function simptomiInFaktorjiTveganjaEHRbaza(ehrId, trenutniSpol, trenutnaStarost) {
+function simptomiInFaktorjiTveganjaEHRbaza(trenutniEhrID, trenutniSpol, trenutnaStarost) {
     evidence = [];
     if (trenutniSpol == 'female') {
         var con = {
@@ -227,9 +245,8 @@ function simptomiInFaktorjiTveganjaEHRbaza(ehrId, trenutniSpol, trenutnaStarost)
         }
     });
     
-    // pritisk
     $.ajax({
-        url: baseUrl + "/view/" + ehrId + "/blood_pressure",
+        url: baseUrl + "/view/" + trenutniEhrID + "/blood_pressure",
 	    type: 'GET',
 	    contentType: 'application/json',
 	    success: function(res) {
@@ -253,7 +270,6 @@ function simptomiInFaktorjiTveganjaEHRbaza(ehrId, trenutniSpol, trenutnaStarost)
 	    }
     });
     
-    // temperatura
     $.ajax({
         url: baseUrl + "/view/" + ehrId + "/body_temperature",
 	    type: 'GET',
@@ -267,8 +283,9 @@ function simptomiInFaktorjiTveganjaEHRbaza(ehrId, trenutniSpol, trenutnaStarost)
 	        if (d != 0 && (sum / d > 101)) {
 	            evidence.push("s_100");
 	        }
-	        else if (d != 0 && ((sum / d) <= 101 && (sum / d) > 99.5))
+	        else if (d != 0 && ((sum / d) <= 101) && ((sum / d) > 99.5)) {
 	            evidence.push("s_99");
+	        }
 	    },
 	    error: function(err) {
             $('#obvestila').html("<div class=alert-danger>Pridobivanje vitalnih znakov ni uspelo. Prosimo poskusite znova.</div>");
@@ -277,7 +294,7 @@ function simptomiInFaktorjiTveganjaEHRbaza(ehrId, trenutniSpol, trenutnaStarost)
 }
 
 
-function poisciOpazovanja(phrase, gender) { 
+function poisciSimptomeInFaktorjeTveganja(phrase, gender) { 
     delete $.ajaxSettings.headers["Ehr-Session"];
     $.ajaxSetup({
 	    headers: {
@@ -320,16 +337,24 @@ function diagnoza(gender, age, evidence, callback) {
         data: JSON.stringify(d),
         success: function(res) {
             $("#graf").html("");
-            izrisi(res.conditions);
+            if (res.conditions.length > 5) {
+                var array = [];
+                for (var i = 0; i < 5; i++) {
+                    array[i] = res.conditions[i];
+                }
+                izrisiGraf(array);
+            } else {
+                izrisiGraf(res.conditions);
+            }
             callback(res);
         }
     });
 }
  
-function podrobnosti(d) {
+function podrobnosti(diagnoza) {
     $("#diagnoze").html("");
-    for (i in d.conditions) {
-        c = d.conditions[i];
+    for (i in diagnoza.conditions) {
+        c = diagnoza.conditions[i];
         (function (c, i) {
         $.ajax({
             url: baseURL + "conditions/"+c.id,
@@ -352,8 +377,7 @@ function podrobnosti(d) {
     }
 }
 
-// graf    
-function izrisi(data) {    
+function izrisiGraf(data) {    
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 400 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
@@ -361,18 +385,9 @@ function izrisi(data) {
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
 
-    var y = d3.scale.linear()
-        .range([height, 0]);
-
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(5);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(5);
 
     var svg = d3.select("#graf").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -382,19 +397,35 @@ function izrisi(data) {
 
 
     x.domain(data.map(function(d) { return d.name; }));
-    y.domain([0, d3.max(data, function(d) { return d.probability; })]);
 
-    svg.append("g")
+    var gxAxis = svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
-        .selectAll("text")	
+        gxAxis.selectAll("text")  
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
-            .attr("transform", function(d) {
-                return "rotate(-90)" 
-            });
+            .attr("transform", "rotate(-65)" );
+            
+    var maxWidth = 0;
+	gxAxis.selectAll("text").each(function () {
+		var boxWidth = this.getBBox().width;
+		if (boxWidth > maxWidth) 
+		    maxWidth = boxWidth;
+	});
+	height = height - maxWidth;
+
+	gxAxis.attr("transform", "translate(0," + height + ")");
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    y.domain([0, d3.max(data, function(d) { return d.probability; })]);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
 
     svg.append("g")
         .attr("class", "y axis")
@@ -402,16 +433,10 @@ function izrisi(data) {
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("dy", ".71em");
-
-   svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
         .text("Probability");
-            
+        
     svg.selectAll(".bar")
         .data(data)
         .enter().append("rect")
@@ -423,13 +448,6 @@ function izrisi(data) {
 
 }
 
-function getAgeInYears(dateOfBirth) {
-    var dob = new Date(dateOfBirth);
-    var timeDiff = Math.abs(Date.now() - dob.getTime());
-    return Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
-}
-
-// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
     var box = bootbox.dialog({
         message: "Kako zelis zaceti?",
@@ -469,15 +487,11 @@ $(document).ready(function() {
         $("#obvestila").html("<div class=alert-success>Vzorcni uporabniki generirani.</div>");
     });
     
-    $("#isci").click(function() {
+    $("#isciEhrID").click(function() {
         var ehrId = $("#vnesiEhrID").val();
         poisciEhrID(ehrId);
     });
     
-    var trenutniEhrID;
-    var trenutniSpol;    
-    var trenutnaStarost;
-
     $(function(){
         $(".dropdown-menu").on('click', 'li a', function() {
         $("#user").html("<div class=alert-info><strong>Trenutni uporabnik:</strong> "+$(this).text()+
@@ -489,14 +503,18 @@ $(document).ready(function() {
         $(".dropdown-menu").on('click', 'li a', function() {
             trenutniEhrID = $(this).attr('data-eid');
             trenutniSpol = $(this).attr('gender');
-            trenutnaStarost = getAgeInYears($(this).attr('dob'));
+            trenutnaStarost = vrniStarostVLetih($(this).attr('dob'));
             simptomiInFaktorjiTveganjaEHRbaza(trenutniEhrID, trenutniSpol, trenutnaStarost);
         });
     });
     
-    $("#isciOpazovanja").click(function() {
-        var phrase = $("#opazovanja").val()
-        poisciOpazovanja(phrase, trenutniSpol);
+    $("#poisciSimptome").click(function() {
+        if (trenutniEhrID == null) {
+            $("#obvestila").html("<div class=alert-danger>Prosimo izberite enega od uporabnikov.</div>");
+        } else {
+            var phrase = $("#vnesiPoizvedbo").val()
+            poisciSimptomeInFaktorjeTveganja(phrase, trenutniSpol);
+        }
     });
     
     $(function() {
@@ -516,8 +534,10 @@ $(document).ready(function() {
         });
     });
 
-    $("#pocisti").click(function() {
+    $("#pocistiIzbor").click(function() {
         $("#izbire").html("");
+        $("#diagnoze").html("");
+        $("#graf").html("");
         evidence = [];
     });
 });

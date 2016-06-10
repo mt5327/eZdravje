@@ -6,10 +6,11 @@
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
+    svg {display: block; margin:auto;}
     .dropdown-menu {position: relative;}
     .bar {fill: steelblue;}
     .bar:hover {fill: brown;}
-    .axis {font: 10px sans-serif;}
+    .axis {font: 12px sans-serif;}
     .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}
     .x.axis path {display: none;}
   </style>
@@ -60,7 +61,7 @@
                 <div class="input-group">
                 <input id="vnesiEhrID" type="text" class="form-control" placeholder="Vnesi EhrID">
                 <span class="input-group-btn">
-                <button id="isci" class="btn btn-default" type="button">Poisci</button>
+                <button id="isciEhrID" class="btn btn-default" type="button">Poisci</button>
               </span>
             </div>
         </div>
@@ -77,52 +78,58 @@
        <div id="user"></div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-6">
+  <div class="row">
+    <div class="col-md-6">
     <div class="panel panel-default">
-      <div class="panel-heading">Iskalnik opazovanj</div>
+      <div class="panel-heading">Iskalnik simptomov in faktorjev tveganja</div>
       <div class="panel-body">
         <div class="input-group">
-          <input id="opazovanja" type="text" class="form-control" placeholder="Poisci opazovanja">
+          <input id="vnesiPoizvedbo" type="text" class="form-control" placeholder="Poisci simptome in faktorje tveganja">
           <span class="input-group-btn">
-          <button id="isciOpazovanja" class="btn btn-default" type="button">Poisci</button>
+          <button id="poisciSimptome" class="btn btn-default" type="button">Poisci</button>
           </span>
         </div>
-    </div>
+      </div>
     </div>
     </div>
     <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">Rezultati</div>
-      <div id="rezultati" class="panel-body">
-      </div> 
+      <div class="panel panel-default">
+        <div class="panel-heading">Rezultati iskanja</div>
+        <div id="rezultati" class="panel-body">
+        </div> 
+      </div>
     </div>
   </div>
-  </div>
   <div class="row">
-      <div class="col-md-6">
-    <div class="panel panel-default">
+    <div class="col-md-6">
+      <div class="panel panel-default">
         <div class="panel-heading">Izbire</div>
         <div class="panel-body">
           <ul id="izbire" class="list-group">
           </ul>
-          <button id="clear" class="btn btn-default" type="button">Pocisti</button>
+          <button id="pocistiIzbor" class="btn btn-default pull-right" type="button">Pocisti</button>
+        </div>
       </div>
     </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">Mozne diagnoze</div>
-      <div class ="panel-body">
-        <div id="diagnoze" class="list-group"></ul>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Mozne diagnoze</div>
+        <div class ="panel-body">
+          <div id="diagnoze" class="list-group">
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="row">
+  <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">Graf verjetnosti</div>
         <div id="graf" class="panel-body">
         </div>
       </div>
+    </div>
+  </div>
   <!-- KONEC: Vsebina aplikacije -->
 </div>
 </body>
